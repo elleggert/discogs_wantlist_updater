@@ -1,13 +1,15 @@
 import discogs_client
+import xml.etree.ElementTree as ET
 
 # Will need to pass the user-specific token to the app to function accordingly
 # Token can be generated under https://www.discogs.com/settings/developers
 
 
 
-
+'''
 print("Please enter your Discogs User-Token:")
 userToken = input()
+
 
 # Establishing an API connection and enabling API limiting
 client = discogs_client.Client('WantlistEditor', user_token=userToken)
@@ -23,4 +25,23 @@ me = client.identity()
 print(me.name, me.username, me.location)
 print(len(me.wantlist))
 print(me.wantlist)
+'''
+
+# ==========Parsing Apple Music Library as XML
+
+tree = ET.parse('MusicEE.xml')
+root = tree.getroot()
+count = 0
+
+for child1 in root:
+    for child2 in child1:
+        for child3 in child2:
+            for child4 in child3:
+                print(child4.text)
+                count += 1
+                if count == 51:
+                    exit()
+
+
+# Find out how i can only acccess certain columns by name of the XML --> extract artist, title and album, nothing more
 
