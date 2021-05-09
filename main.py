@@ -31,16 +31,22 @@ print(me.wantlist)
 
 tree = ET.parse('MusicEE.xml')
 root = tree.getroot()
-count = 0
+
+song_database = []
 
 for child1 in root:
     for child2 in child1:
         for child3 in child2:
+            count = 0
+            song = []
             for child4 in child3:
-                print(child4.text)
+                if count == 3 or count == 5 or count == 9 or count == 50:
+                    song.append(child4.text)
                 count += 1
-                if count == 51:
-                    exit()
+
+            print(song)
+
+    exit()
 
 
 # Find out how i can only acccess certain columns by name of the XML --> extract artist, title and album, nothing more
