@@ -29,25 +29,35 @@ print(me.wantlist)
 
 # ==========Parsing Apple Music Library as XML
 
-tree = ET.parse('MusicEE.xml')
+tree = ET.parse('MusicEE2.xml')
 root = tree.getroot()
 
-song_database = []
+song_database_full = []
 
 for child1 in root:
     for child2 in child1:
         for child3 in child2:
-            count = 0
             song = []
             for child4 in child3:
-                if count == 3 or count == 5 or count == 9 or count == 50:
-                    song.append(child4.text)
-                count += 1
+                song.append(child4.text)
 
-            print(song)
-
-    exit()
+            song_database_full.append(song)
 
 
+song_database = []
+
+
+for item in song_database_full:
+    song = []
+    for i in range(len(item)):
+        if item[i] == "Name":
+            song.append(item[i+1])
+        if item[i] == "Artist":
+            song.append(item[i+1])
+
+    if len(song) == 2:
+        song_database.append(song)
+
+print(len(song_database))
 # Find out how i can only acccess certain columns by name of the XML --> extract artist, title and album, nothing more
 
