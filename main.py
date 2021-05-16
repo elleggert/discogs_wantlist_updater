@@ -53,40 +53,30 @@ userToken = input()
 client = discogs_client.Client('WantlistEditor', user_token=userToken)
 client.backoff_enabled = True
 
-# Querying some the releases from the song database
-results = client.search(song_database[0][0], artist=song_database[0][1], type='release')
-
-
 # Generate a set with all release ids of a users wantlist
 wantlist_ids = set()
 me = client.identity()
 for item in me.wantlist:
     wantlist_ids.add(item.id)
 
-# For each result of a query, find the master release ID and add to a set of ids, this avoids iterating through the same
-# master several times
 
-master_id_set = set()
+for i in range(5):
+    # Querying some the releases from the song database
+    print(song_database[i])
+    results = client.search(song_database[i][0], artist=song_database[i][1], type='master')
 
 
-for result in results:
-    #Getting all the releases
-    release = client.release(result.id)
-    if release.master != None:
-        release_master_id = release.master.id
-        master_id_set.add(release_master_id)
 
-# Iterating through master releases and adding all those that are vinyl to the wantlist, if they are not yet in it
+    for master_release in results:
 
-for master_release_id in master_id_set:
-    master_release = client.master(master_release_id)
+    # Iterating through master releases and adding all those that are vinyl to the wantlist, if they are not yet in it
+        for release_version in master_release.versions:
+            if release_version.id in wantlist_ids:
+                continue
+            release_format = release_version.formats[0]
+            if release_format["name"] == "Vinyl":
+                me.wantlist.add(release_version)
 
-    for release_version in master_release.versions:
-        if release_version.id in wantlist_ids:
-            continue
-        release_format = release_version.formats[0]
-        if release_format["name"] == "Vinyl":
-            me.wantlist.add(release_version)
-
+    exit()
 
 
