@@ -53,18 +53,29 @@ userToken = input()
 client = discogs_client.Client('WantlistEditor', user_token=userToken)
 client.backoff_enabled = True
 
-# Querying some example releases
-results = client.search('Vamp', artist='Outlander', type='release')
-print(results.pages)
-#for result in results.page(1):
-#    print(result)
+# Querying some the releases from the song database
+results = client.search(song_database[0][0], artist=song_database[0][1], type='release')
 
-release = client.release(31031)
-for release_version in release.master.versions:
-    release_format = release_version.formats[0]
-    print(release_format["name"])
+master_id_set = set()
 
-    '''
+# For each result of a query, find the master release ID and add to a set of ids, this avoids iterating through the same
+# master several times
+
+for result in results:
+    #Getting all the releases
+    release = client.release(result.id)
+    if release.master != None:
+        release_master_id = release.master.id
+        master_id_set.add(release_master_id)
+
+    for release_version in release.master.versions:
+        print(release_version)
+        release_format = release_version.formats[0]
+        print(release_format["name"])
+
+print(master_id_set)
+
+'''
     me = client.identity()
     print(me.name, me.username, me.location)
     print(len(me.wantlist))
