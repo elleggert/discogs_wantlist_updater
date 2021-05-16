@@ -6,32 +6,15 @@ import xml.etree.ElementTree as ET
 
 
 
-'''
-print("Please enter your Discogs User-Token:")
-userToken = input()
-
-
-# Establishing an API connection and enabling API limiting
-client = discogs_client.Client('WantlistEditor', user_token=userToken)
-client.backoff_enabled = True
-
-# Querying some example releases
-results = client.search('Phylyps Trak II', type='release')
-print(results.pages)
-artist = results[0].artists[0]
-print(artist.name)
-
-me = client.identity()
-print(me.name, me.username, me.location)
-print(len(me.wantlist))
-print(me.wantlist)
-'''
 
 # ==========Parsing Apple Music Library as XML
 
+# Creating an XML Parsetree
 tree = ET.parse('MusicEE2.xml')
 root = tree.getroot()
 
+
+#Extracting all information from the XML on every song
 song_database_full = []
 
 for child1 in root:
@@ -44,6 +27,8 @@ for child1 in root:
             song_database_full.append(song)
 
 
+
+# Reduce the information to only hold title and artist
 song_database = []
 
 
@@ -58,6 +43,30 @@ for item in song_database_full:
     if len(song) == 2:
         song_database.append(song)
 
-print(len(song_database))
-# Find out how i can only acccess certain columns by name of the XML --> extract artist, title and album, nothing more
 
+
+print("Please enter your Discogs User-Token:")
+userToken = input()
+
+
+# Establishing an API connection and enabling API limiting
+client = discogs_client.Client('WantlistEditor', user_token=userToken)
+client.backoff_enabled = True
+
+# Querying some example releases
+results = client.search('Vamp', artist='Outlander', type='release')
+print(results.pages)
+#for result in results.page(1):
+#    print(result)
+
+release = client.release(31031)
+for release_version in release.master.versions:
+    release_format = release_version.formats[0]
+    print(release_format["name"])
+
+    '''
+    me = client.identity()
+    print(me.name, me.username, me.location)
+    print(len(me.wantlist))
+    print(me.wantlist)
+    '''
