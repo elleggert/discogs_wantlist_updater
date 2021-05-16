@@ -59,11 +59,10 @@ me = client.identity()
 for item in me.wantlist:
     wantlist_ids.add(item.id)
 
-
-for i in range(5):
+songs_added_count = 0
+for song in song_database:
     # Querying some the releases from the song database
-    print(song_database[i])
-    results = client.search(song_database[i][0], artist=song_database[i][1], type='master')
+    results = client.search(song[0], artist=song[1], type='master')
 
 
 
@@ -75,8 +74,8 @@ for i in range(5):
                 continue
             release_format = release_version.formats[0]
             if release_format["name"] == "Vinyl":
+                songs_added_count += 1
                 me.wantlist.add(release_version)
 
-    exit()
 
-
+print(songs_added_count)
