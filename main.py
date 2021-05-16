@@ -56,10 +56,18 @@ client.backoff_enabled = True
 # Querying some the releases from the song database
 results = client.search(song_database[0][0], artist=song_database[0][1], type='release')
 
-master_id_set = set()
+
+# Generate a set with all release ids of a users wantlist
+wantlist_ids = set()
+me = client.identity()
+for item in me.wantlist:
+    wantlist_ids.add(item.id)
 
 # For each result of a query, find the master release ID and add to a set of ids, this avoids iterating through the same
 # master several times
+
+master_id_set = set()
+
 
 for result in results:
     #Getting all the releases
@@ -68,16 +76,17 @@ for result in results:
         release_master_id = release.master.id
         master_id_set.add(release_master_id)
 
-    for release_version in release.master.versions:
-        print(release_version)
+# Iterating through master releases and adding all those that are vinyl to the wantlist, if they are not yet in it
+
+for master_release_id in master_id_set:
+    master_release = client.master(master_release_id)
+
+    for release_version in master_release.versions:
+        if release_version.id in wantlist_ids:
+            continue
         release_format = release_version.formats[0]
-        print(release_format["name"])
+        if release_format["name"] == "Vinyl":
+            me.wantlist.add(release_version)
 
-print(master_id_set)
 
-'''
-    me = client.identity()
-    print(me.name, me.username, me.location)
-    print(len(me.wantlist))
-    print(me.wantlist)
-    '''
+
