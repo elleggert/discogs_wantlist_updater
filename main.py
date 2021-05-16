@@ -60,9 +60,9 @@ for item in me.wantlist:
     wantlist_ids.add(item.id)
 
 songs_added_count = 0
-for song in song_database:
+for i in range(len(song_database)):
     # Querying some the releases from the song database
-    results = client.search(song[0], artist=song[1], type='master')
+    results = client.search(song_database[i][0], artist=song_database[i][1], type='master')
 
 
 
@@ -77,5 +77,7 @@ for song in song_database:
                 songs_added_count += 1
                 me.wantlist.add(release_version)
 
-
-print(songs_added_count)
+    if (i % 25 == 0):
+        print(i, "of ", len(song_database), "songs parsed")
+        print(songs_added_count)
+        exit()
