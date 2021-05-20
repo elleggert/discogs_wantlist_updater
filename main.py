@@ -60,14 +60,16 @@ for item in me.wantlist:
     wantlist_ids.add(item.id)
 
 songs_added_count = 0
-for i in range(1200,len(song_database)):
+for i in range(1450,len(song_database)):
     # Querying some the releases from the song database
     results = client.search(song_database[i][0], artist=song_database[i][1], type='master')
 
 
-
+    index = 0
     for master_release in results:
 
+        if index > 5:
+            break
     # Iterating through master releases and adding all those that are vinyl to the wantlist, if they are not yet in it
         for release_version in master_release.versions:
             if release_version.id in wantlist_ids:
@@ -77,10 +79,12 @@ for i in range(1200,len(song_database)):
                 songs_added_count += 1
                 me.wantlist.add(release_version)
 
+        index += 1
+
+
     if (i % 25 == 0):
         print(i, "of ", len(song_database), "songs parsed")
         print(songs_added_count)
 
 # Todo:
-# 1. Pip Virtual Environment, pip freeze > requirements.txt
-# 2. create main function, taking user ID as command line input, specify whether vinyl or all formats
+# 1. create main function, taking user ID as command line input, specify whether vinyl or all formats
