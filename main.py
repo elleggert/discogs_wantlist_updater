@@ -10,7 +10,7 @@ import xml.etree.ElementTree as ET
 # ==========Parsing Apple Music Library as XML
 
 # Creating an XML Parsetree
-tree = ET.parse('MusicEE2.xml')
+tree = ET.parse('ra_june.xml')
 root = tree.getroot()
 
 
@@ -56,11 +56,11 @@ client.backoff_enabled = True
 # Generate a set with all release ids of a users wantlist
 wantlist_ids = set()
 me = client.identity()
-for item in me.wantlist:
-    wantlist_ids.add(item.id)
+# for item in me.wantlist:
+    # wantlist_ids.add(item.id)
 
 songs_added_count = 0
-for i in range(3125,len(song_database)):
+for i in range(len(song_database)):
     # Querying some the releases from the song database
     results = client.search(song_database[i][0], artist=song_database[i][1], type='master')
 
