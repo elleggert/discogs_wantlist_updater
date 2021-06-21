@@ -6,4 +6,4 @@ Program parses the Library exported as XML, extracts information on artists and 
 
 Afterwards, master releases that contain the titles from the Itunes Library are queried from the Discogs API and every Vinyl Release is added to the wantlist.
 
-Note: Only works with Apple Music or Itunes so far, no spotify compatibility.
+Note: Only works with Apple Music or Itunes so far, no spotify compatibility. To use, users must apply for User Tokens for the Discogs Web API (link in main.py)
