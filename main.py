@@ -88,6 +88,3 @@ for i in range(len(song_database)):
     if (i % 25 == 0):
         print(i, "of ", len(song_database), "songs parsed")
         print(songs_added_count)
-
-# Todo:
-# 1. create main function, taking user ID as command line input, specify whether vinyl or all formats
