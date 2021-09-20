@@ -1,16 +1,26 @@
 import discogs_client
 import xml.etree.ElementTree as ET
+import argparse
 
 # Will need to pass the user-specific token to the app to function accordingly
 # Token can be generated under https://www.discogs.com/settings/developers
 
+parser = argparse.ArgumentParser(description='Discogs Wantlist Updater',
+                                     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+parser.add_argument('-p', '--path_to_data', default='ra_june.xml', metavar='', type=str,
+                        help='path to the  file containing the XML exported from Itunes')
 
+parser.add_argument('-d', '--discogs_api_token', default='NA', metavar='', type=str,
+                        help='discogs API token, if not provided, will be queried as user input')
 
+args = vars(parser.parse_args())
+path_to_xml = args['path_to_data']
+userToken = args['discogs_api_token']
 
 # ==========Parsing Apple Music Library as XML
 
 # Creating an XML Parsetree
-tree = ET.parse('ra_june.xml')
+tree = ET.parse(path_to_xml)
 root = tree.getroot()
 
 
@@ -44,9 +54,9 @@ for item in song_database_full:
         song_database.append(song)
 
 
-
-print("Please enter your Discogs User-Token:")
-userToken = input()
+if userToken == 'NA':
+    print("Please enter your Discogs User-Token:")
+    userToken = input()
 
 
 # Establishing an API connection and enabling API limiting
@@ -56,8 +66,7 @@ client.backoff_enabled = True
 # Generate a set with all release ids of a users wantlist
 wantlist_ids = set()
 me = client.identity()
-# for item in me.wantlist:
-    # wantlist_ids.add(item.id)
+
 
 songs_added_count = 0
 for i in range(len(song_database)):
